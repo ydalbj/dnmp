@@ -1,0 +1,36 @@
+version: "3"
+services:
+  php:
+    build: ./php
+    ports:
+      - "9000:9000"
+    networks:
+      - webnet
+    volumes:
+      - ~/code/laravel-shop:/www/laravel-shop
+      - ~/code/laravel57:/www/laravel57
+
+  mysql:
+    image: "mysql:8.0.13"
+    networks: 
+      - webnet
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    volumes:
+      - $PWD/mysql/data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  nginx:
+    build: ./nginx
+    networks:
+      - webnet
+    volumes:
+      - ~/code/laravel-shop:/www/laravel-shop
+      - ~/code/laravel57:/www/laravel57
+    depends_on:
+      - php
+
+
+networks:
+  webnet:
